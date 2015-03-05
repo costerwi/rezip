@@ -49,6 +49,9 @@ based on concepts demonstrated in the
 [Mercurial Zipdoc extension](http://mercurial.selenic.com/wiki/ZipdocExtension)
 by Andreas Gobell.
 
+[callegar/Rezip](https://github.com/callegar/Rezip) performs this 
+same Git filter using a bash script to drive Info-ZIP zip/unzip executables.
+
 [Zippey](https://bitbucket.org/sippey/zippey) is a similar method available 
 for Git is but
 it stores uncompressed data as custom records within the Git repository.
