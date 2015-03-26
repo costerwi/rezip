@@ -16,7 +16,6 @@ public class Rezip {
             if (arg.equals("--store")) {
                 compression = ZipEntry.STORED;
             } else {
-                System.err.println(arg);
                 System.err.println("Usage: Rezip {--store} <in.zip >out.zip");
                 System.exit(1);
             }
