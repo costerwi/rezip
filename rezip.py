@@ -22,6 +22,9 @@ if args.store:
 else:
     compression = ZIP_DEFLATED
 
+if not hasattr(sys.stdout, 'buffer'):
+    raise RuntimeError('Sorry, Python3 is required.')
+
 # Use BytesIO objects as random access source and destination files
 with io.BytesIO(sys.stdin.buffer.read()) as source, io.BytesIO() as dest:
 
