@@ -23,19 +23,33 @@ public class Rezip {
 
         ZipInputStream source_zip = new ZipInputStream(System.in);
         ZipOutputStream dest_zip = new ZipOutputStream(System.out);
+
         byte[] buffer = new byte[2048];
         ZipEntry source_entry;
+        CRC32 cksum = new CRC32();
         try {
             while ((source_entry = source_zip.getNextEntry()) != null) {
-                ZipEntry dest_entry = (ZipEntry) source_entry.clone();
-                dest_entry.setCompressedSize(-1);   // Unknown size
-                dest_entry.setMethod(compression);
-                dest_zip.putNextEntry(dest_entry);
+                ByteArrayOutputStream uncomp_bs = new ByteArrayOutputStream();
+                CheckedOutputStream uncomp_os = new CheckedOutputStream(uncomp_bs, cksum);
+                cksum.reset();
+
+                // Copy file from source_zip into uncompressed, checksummed output stream
                 int len = 0;
                 while ((len = source_zip.read(buffer)) > 0) {
-                    dest_zip.write(buffer, 0, len);
+                    uncomp_os.write(buffer, 0, len);
                 }
                 source_zip.closeEntry();
+
+                // Create destination entry based on source entry
+                ZipEntry dest_entry = new ZipEntry(source_entry);
+                dest_entry.setSize(uncomp_bs.size());
+                dest_entry.setCrc(cksum.getValue());
+                dest_entry.setMethod(compression);
+                dest_entry.setCompressedSize(-1); // Unknown compressed size
+
+                // Copy uncompressed file into destination zip
+                dest_zip.putNextEntry(dest_entry);
+                uncomp_bs.writeTo(dest_zip);
                 dest_zip.closeEntry();
             }
         } finally {
