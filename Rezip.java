@@ -24,13 +24,14 @@ public class Rezip {
         ZipInputStream source_zip = new ZipInputStream(System.in);
         ZipOutputStream dest_zip = new ZipOutputStream(System.out);
 
-        byte[] buffer = new byte[2048];
-        ZipEntry source_entry;
+        byte[] buffer = new byte[8192];
+        ZipEntry entry;
+        ByteArrayOutputStream uncomp_bs = new ByteArrayOutputStream();
         CRC32 cksum = new CRC32();
+        CheckedOutputStream uncomp_os = new CheckedOutputStream(uncomp_bs, cksum);
         try {
-            while ((source_entry = source_zip.getNextEntry()) != null) {
-                ByteArrayOutputStream uncomp_bs = new ByteArrayOutputStream();
-                CheckedOutputStream uncomp_os = new CheckedOutputStream(uncomp_bs, cksum);
+            while ((entry = source_zip.getNextEntry()) != null) {
+                uncomp_bs.reset();
                 cksum.reset();
 
                 // Copy file from source_zip into uncompressed, checksummed output stream
@@ -40,15 +41,14 @@ public class Rezip {
                 }
                 source_zip.closeEntry();
 
-                // Create destination entry based on source entry
-                ZipEntry dest_entry = new ZipEntry(source_entry);
-                dest_entry.setSize(uncomp_bs.size());
-                dest_entry.setCrc(cksum.getValue());
-                dest_entry.setMethod(compression);
-                dest_entry.setCompressedSize(-1); // Unknown compressed size
+                // Modify zip entry for destination zip
+                entry.setSize(uncomp_bs.size());
+                entry.setCrc(cksum.getValue());
+                entry.setMethod(compression);
+                entry.setCompressedSize(-1); // Unknown compressed size
 
                 // Copy uncompressed file into destination zip
-                dest_zip.putNextEntry(dest_entry);
+                dest_zip.putNextEntry(entry);
                 uncomp_bs.writeTo(dest_zip);
                 dest_zip.closeEntry();
             }
