@@ -42,14 +42,19 @@ without using the clean filter
 the only harm will be the usual loss of packing efficiency for compressed
 documents during garbage collection.
 
-##Inspiration
+##Inspiration and similar projects
 The idea to commit zip documents to the repository in uncompressed form was 
 based on concepts demonstrated in the 
 [Mercurial Zipdoc extension](http://mercurial.selenic.com/wiki/ZipdocExtension)
 by Andreas Gobell.
 
-[callegar/Rezip](https://github.com/callegar/Rezip) performs this 
-same Git filter using a bash script to drive Info-ZIP zip/unzip executables.
+[OoXmlUnpack](https://bitbucket.org/htilabs/ooxmlunpack) is a similar program 
+for Mercurial, written in c#, which also pretty-prints the xml files and adds 
+some file handling features specific to Excel.
+
+[callegar/Rezip](https://github.com/callegar/Rezip) should be compatible with
+this Git filter but is written as a bash script to drive Info-ZIP zip/unzip 
+executables.
 
 [Zippey](https://bitbucket.org/sippey/zippey) is a similar method available 
 for Git is but
@@ -58,7 +63,7 @@ This format is not directly usable without the smudge filter so it is a less
 portable option.
 
 ##Diffing
-Sorry, you'll still need a custom diff or 
+Sorry, you'll still need a custom diff for your particular format or 
 [textconv](http://blog.martinfenner.org/2014/08/25/using-microsoft-word-with-git/)
 if you want to see a human readable diff between revisions.
 
