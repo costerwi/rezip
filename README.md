@@ -63,9 +63,14 @@ This format is not directly usable without the smudge filter so it is a less
 portable option.
 
 ##Diffing
-Sorry, you'll still need a custom diff for your particular format or 
-[textconv](http://blog.martinfenner.org/2014/08/25/using-microsoft-word-with-git/)
-if you want to see a human readable diff between revisions.
+This filter is only concerned with the efficient storage of zip data within Git.
+For human readable diffs between revisions you'll need to add a Git textconv program that can convert your format into text.
+Direct merges are not possible since they would corrupt the zip CRC checksum.
+If the data within the zip is text or simple xml then you could visualize differences with a textconv program like
+[zipdoc](https://github.com/costerwi/zipdoc).
+For more complex documents, there are specific options for 
+[word processing](http://blog.martinfenner.org/2014/08/25/using-microsoft-word-with-git/) and
+[Excel](https://github.com/tokuhirom/git-xlsx-textconv).
 
 ##Installation
 This program requires Java JRE 6 or newer.
