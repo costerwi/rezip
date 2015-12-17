@@ -1,5 +1,5 @@
-#Rezip for more efficient Git packing
-##About
+# Rezip for more efficient Git packing
+## About
 Many popular applications, such as 
 [Microsoft](http://en.wikipedia.org/wiki/Office_Open_XML) and 
 [Open](http://en.wikipedia.org/wiki/OpenDocument) Office, 
@@ -42,7 +42,7 @@ without using the clean filter
 the only harm will be the usual loss of packing efficiency for compressed
 documents during garbage collection.
 
-##Inspiration and similar projects
+## Inspiration and similar projects
 The idea to commit zip documents to the repository in uncompressed form was 
 based on concepts demonstrated in the 
 [Mercurial Zipdoc extension](http://mercurial.selenic.com/wiki/ZipdocExtension)
@@ -62,17 +62,19 @@ it stores uncompressed data as custom records within the Git repository.
 This format is not directly usable without the smudge filter so it is a less
 portable option.
 
-##Diffing
+## Diffing
 This filter is only concerned with the efficient storage of zip data within Git.
 For human readable diffs between revisions you'll need to add a Git textconv program that can convert your format into text.
 Direct merges are not possible since they would corrupt the zip CRC checksum.
 If the data within the zip is text or simple xml then you could visualize differences with a textconv program like
 [zipdoc](https://github.com/costerwi/zipdoc).
 For more complex documents, there are specific options for 
-[word processing](http://blog.martinfenner.org/2014/08/25/using-microsoft-word-with-git/) and
-[Excel](https://github.com/tokuhirom/git-xlsx-textconv).
+[word processing](http://blog.martinfenner.org/2014/08/25/using-microsoft-word-with-git/),
+[Excel](https://github.com/tokuhirom/git-xlsx-textconv),
+and
+[Simulink](https://github.com/costerwi/simulink-mergeDiff).
 
-##Installation
+## Installation
 This program requires Java JRE 6 or newer.
 Store Rezip.class somewhere in your home directory, for example ~/bin.
 
@@ -107,13 +109,17 @@ three stages of a file when resolving a three-way merge:
 git config --add --bool merge.renormalize true
 ```
 
-##Observations
+## Observations
 The following are based on my experience in real-world cases.
 Use at your own risk.
 Your mileage may vary.
-###Simulink
-The packed repository with rezip was 54% of the size of the packed repository storing compressed zips.
-###Powerpoint
+
+### Simulink
+
+* One packed repository with rezip was 54% of the size of the packed repository storing compressed zips.
+* Another repository with 280 .slx files and over 3000 commits was originally 281 MB and was reduced to 156 MB using this technique (55% of baseline).
+
+### Powerpoint
 I found that the loose objects stored without this filter were about 5% smaller
 than the original file size (zlib on top of zip compression).
 When using the rezip filter the loose objects were about 10% smaller than the 
