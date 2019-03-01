@@ -22,7 +22,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-public class Rezip {
+public class ReZip {
     /**
      * Read zip format file from stdin and write new zip to stdout.
      *
@@ -37,7 +37,7 @@ public class Rezip {
             if (arg.equals("--store")) {
                 compression = ZipEntry.STORED;
             } else {
-                System.err.printf("Usage: %s {--store} <in.zip >out.zip\n", Rezip.class.getSimpleName());
+                System.err.printf("Usage: %s {--store} <in.zip >out.zip\n", ReZip.class.getSimpleName());
                 System.exit(1);
             }
         }
@@ -73,4 +73,3 @@ public class Rezip {
         }
     }
 }
-

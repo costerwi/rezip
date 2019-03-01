@@ -1,4 +1,5 @@
-# Rezip for more efficient Git packing
+# ReZip
+For more efficient Git packing of ZIP based files.
 
 ## Motivation
 
@@ -98,13 +99,14 @@ and
 ## Installation
 
 This program requires Java JRE 6 or newer.
-Store _Rezip.class_ somewhere in your home directory, for example ~/bin, or in your repository.
+Store _ReZip.class_ somewhere in your home directory,
+for example `~/bin`, or in your repository.
 
-Define the filter drivers in ~/.gitconfig :
+Define the filter drivers in `~/.gitconfig`:
 ```
-git config --global --replace-all filter.rezip.clean "java -cp ~/bin Rezip --store"
+git config --global --replace-all filter.rezip.clean "java -cp ~/bin ReZip --store"
 # optionally add smudge filter:
-git config --global --add filter.rezip.smudge "java -cp ~/bin Rezip"
+git config --global --add filter.rezip.smudge "java -cp ~/bin ReZip"
 ```
 
 Assign filter attributes to paths in `<repo-root>/.gitattributes`:
