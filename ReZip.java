@@ -22,14 +22,17 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * Read ZIP content and writes (optionally <i>uncompressed</i>) ZIP out.
+ * Uncompressed files are stored more efficiently in Git.
+ * {@see https://github.com/costerwi/rezip}
+ */
 public class ReZip {
+
     /**
-     * Read zip format file from stdin and write new zip to stdout.
-     *
+     * Reads a ZIP file from stdin and writes new ZIP to stdout.
      * With the --store command line argument the output will be an
      * uncompressed zip.
-     * Uncompressed files are stored more efficiently in Git.
-     * {@see https://github.com/costerwi/rezip}
      */
     public static void main(final String[] argv) throws IOException {
         int compression = ZipEntry.DEFLATED;
@@ -59,13 +62,13 @@ public class ReZip {
                 }
                 zipIn.closeEntry();
 
-                // Modify zip entry for destination zip
+                // Modify ZIP entry for destination ZIP
                 entry.setSize(uncompressedOutRaw.size());
                 entry.setCrc(checksum.getValue());
                 entry.setMethod(compression);
                 entry.setCompressedSize(-1); // Unknown compressed size
 
-                // Copy uncompressed file into destination zip
+                // Copy uncompressed file into destination ZIP
                 zipOut.putNextEntry(entry);
                 uncompressedOutRaw.writeTo(zipOut);
                 zipOut.closeEntry();
