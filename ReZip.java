@@ -44,31 +44,31 @@ public class ReZip {
 
         final byte[] buffer = new byte[8192];
         ZipEntry entry;
-        final ByteArrayOutputStream uncompressed_bs = new ByteArrayOutputStream();
+        final ByteArrayOutputStream uncompressedOutRaw = new ByteArrayOutputStream();
         final CRC32 checksum = new CRC32();
-        final CheckedOutputStream uncompressed_os = new CheckedOutputStream(uncompressed_bs, checksum);
-        try (final ZipInputStream source_zip = new ZipInputStream(System.in); final ZipOutputStream dest_zip = new ZipOutputStream(System.out)) {
-            while ((entry = source_zip.getNextEntry()) != null) {
-                uncompressed_bs.reset();
+        final CheckedOutputStream uncompressedOutChecked = new CheckedOutputStream(uncompressedOutRaw, checksum);
+        try (final ZipInputStream zipIn = new ZipInputStream(System.in); final ZipOutputStream zipOut = new ZipOutputStream(System.out)) {
+            while ((entry = zipIn.getNextEntry()) != null) {
+                uncompressedOutRaw.reset();
                 checksum.reset();
 
-                // Copy file from source_zip into uncompressed, check-summed output stream
+                // Copy file from zipIn into uncompressed, check-summed output stream
                 int len;
-                while ((len = source_zip.read(buffer)) > 0) {
-                    uncompressed_os.write(buffer, 0, len);
+                while ((len = zipIn.read(buffer)) > 0) {
+                    uncompressedOutChecked.write(buffer, 0, len);
                 }
-                source_zip.closeEntry();
+                zipIn.closeEntry();
 
                 // Modify zip entry for destination zip
-                entry.setSize(uncompressed_bs.size());
+                entry.setSize(uncompressedOutRaw.size());
                 entry.setCrc(checksum.getValue());
                 entry.setMethod(compression);
                 entry.setCompressedSize(-1); // Unknown compressed size
 
                 // Copy uncompressed file into destination zip
-                dest_zip.putNextEntry(entry);
-                uncompressed_bs.writeTo(dest_zip);
-                dest_zip.closeEntry();
+                zipOut.putNextEntry(entry);
+                uncompressedOutRaw.writeTo(zipOut);
+                zipOut.closeEntry();
             }
         }
     }
