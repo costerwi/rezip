@@ -1,3 +1,46 @@
+# Ken's Notes
+## Compile
+* Compile ReZip.class
+* Create manifest.mf
+   * __Must__ have blank line at the end
+```
+Manifest-Version: 1.0
+Main-Class: ReZip
+
+```
+* Create jar file
+```
+jar cmf manifest.mf ReZip.jar ReZip.class
+```
+* Copy jar file to the _home_ directory of the project (the directory with .git directory in it)
+## Run
+* Run jar file
+```
+java -jar ReZip
+```
+
+## Configure
+* .git/config
+ ```
+[filter "rezip"]
+	clean = java -jar ReZip.jar --store
+	smudge = java -jar ReZip.jar
+ ```
+ * .gitattributes
+  ```
+# MS Office ReZip
+*.docx  filter=rezip
+*.xlsx  filter=rezip
+*.pptx  filter=rezip
+# OpenOffice ReZip
+*.odt   filter=rezip
+*.ods   filter=rezip
+*.odp   filter=rezip
+# Misc ReZip
+*.mcdx  filter=rezip
+*.slx   filter=rezip
+ ```
+  
 # ReZip
 For more efficient Git packing of ZIP based files.
 
