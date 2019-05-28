@@ -141,7 +141,7 @@ and
 
 ## Installation
 
-This program requires Java JRE 6 or newer.
+This program requires Java JRE 8 or newer.
 Store _ReZip.class_ somewhere in your home directory,
 for example `~/bin`, or in your repository.
 
