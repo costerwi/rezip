@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Read zip format file from stdin and write new zip to stdout.
 
 With the --store option the output will be an uncompressed zip.
@@ -41,7 +41,11 @@ with io.BytesIO(sys.stdin.buffer.read()) as source, io.BytesIO() as dest:
                 newinfo.create_system = 0  # everything else is fixed
             else:
                 newinfo = info
-            dest_zip.writestr(newinfo, source_zip.read(info), compression)
+            if info.file_size < 512 or info.filename.lower().endswith('png'):
+                # These files are always STORED
+                dest_zip.writestr(newinfo, source_zip.read(info), ZIP_STORED)
+            else:
+                dest_zip.writestr(newinfo, source_zip.read(info), compression)
         dest_zip.comment = source_zip.comment # Copy the comment if any
 
     # Write the dest file as binary to stdout

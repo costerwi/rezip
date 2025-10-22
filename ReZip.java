@@ -65,7 +65,12 @@ public class ReZip {
                 // Modify ZIP entry for destination ZIP
                 entry.setSize(uncompressedOutRaw.size());
                 entry.setCrc(checksum.getValue());
-                entry.setMethod(compression);
+                if (entry.getSize() < 512 || entry.getName().toLowerCase().endsWith("png")) {
+                    // These files are always STORED
+                    entry.setMethod(ZipEntry.STORED);
+                } else {
+                    entry.setMethod(compression);
+                }
                 entry.setCompressedSize(-1); // Unknown compressed size
 
                 // Copy uncompressed file into destination ZIP
